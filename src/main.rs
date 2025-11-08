@@ -1,3 +1,4 @@
+use chrono::Local;
 use std::{
     io::{self, stdout, Write},
     time::{Duration, Instant},
@@ -13,12 +14,18 @@ use crossterm::{
 
 use clap::Parser;
 
+mod config;
+mod stats;
+
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
 struct Cli {
     /// Open the customization menu
     #[arg(short, long)]
     menu: bool,
+    /// Show the stats
+    #[arg(short, long)]
+    stats: bool,
 }
 
 
@@ -199,7 +206,7 @@ fn get_best_of(results: &[Duration], count: usize) -> Option<Duration> {
     if results.len() == 0 {
         return None;
     }
-    results.iter().rev().take(count).min().cloned()
+    results.iter().min().cloned()
 }
 
 fn get_best_total(results: &[Duration]) -> Option<Duration> {
@@ -359,6 +366,11 @@ fn run_timer(config: AppConfig) -> io::Result<()> {
                                         let duration = start.elapsed();
                                         last_duration = Some(duration);
                                         results.push(duration);
+                                        let solve = config::Solve {
+                                            time: duration.as_millis(),
+                                            timestamp: Local::now().to_rfc3339(),
+                                        };
+                                        config::add_solve(solve).ok();
                                     }
                                     space_is_down = false;
                                     hold_start_instant = None;
@@ -390,6 +402,11 @@ fn run_timer(config: AppConfig) -> io::Result<()> {
                                         let duration = start.elapsed();
                                         last_duration = Some(duration);
                                         results.push(duration);
+                                        let solve = config::Solve {
+                                            time: duration.as_millis(),
+                                            timestamp: Local::now().to_rfc3339(),
+                                        };
+                                        config::add_solve(solve).ok();
                                     }
                                 }
                             }
@@ -422,10 +439,14 @@ fn main() -> io::Result<()> {
 
     if cli.menu {
         run_menu(&mut config)?;
+    } else if cli.stats {
+        stats::show_stats()?;
+        return Ok(());
     }
 
     run_timer(config)?;
 
     Ok(())
 }
+
 

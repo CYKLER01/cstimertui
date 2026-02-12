@@ -23,8 +23,8 @@ A terminal-based speedcubing timer written in Rust, inspired by cstimer.net.
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/cykler01/rustcstimer.git
-    cd rustcstimer
+    git clone https://github.com/cykler01/cstimertui.git
+    cd cstimertui
     ```
 
 2.  **Build the project:**
@@ -35,15 +35,15 @@ A terminal-based speedcubing timer written in Rust, inspired by cstimer.net.
 3.  **Run the application:**
     *   To start the timer:
         ```bash
-        ./target/release/rustcstimer
+        ./target/release/cstimertui
         ```
     *   To open the settings menu:
         ```bash
-        ./target/release/rustcstimer -m
+        ./target/release/cstimertui -m
         ```
     *   To see the help message:
         ```bash
-        ./target/release/rustcstimer -h
+        ./target/release/cstimertui -h
         ```
 
 ### Installation
@@ -54,7 +54,7 @@ You can install the application to make it available system-wide.
     ```bash
     cargo install --path .
     ```
-    This will install the binary to `~/.cargo/bin/rustcstimer`.
+    This will install the binary to `~/.cargo/bin/cstimertui`.
 
 2.  **Ensure `~/.cargo/bin` is in your `PATH`:**
     Add the following line to your shell's configuration file (e.g., `~/.bashrc`, `~/.zshrc`):
@@ -63,10 +63,10 @@ You can install the application to make it available system-wide.
     ```
 
 3.  **Run the application:**
-    You can now run the application from anywhere using the `rustcstimer` command:
+    You can now run the application from anywhere using the `cstimertui` command:
     ```bash
-    rustcstimer
-    rustcstimer -m
+    cstimertui
+    cstimertui -m
     ```
 
 ## How to Use

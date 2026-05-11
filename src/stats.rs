@@ -6,7 +6,7 @@ use crossterm::{
     terminal::{self, Clear, ClearType, EnterAlternateScreen, LeaveAlternateScreen},
     ExecutableCommand,
 };
-use std::io::{self, Stdout};
+use std::io::{self, Stdout, Write};
 
 pub fn show_stats() -> io::Result<()> {
     let mut stdout = io::stdout();

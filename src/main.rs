@@ -9,7 +9,7 @@ use crossterm::{
     event::{self, Event, KeyCode},
     execute,
     style::{Color, ResetColor, SetBackgroundColor, SetForegroundColor},
-    terminal::{self, disable_raw_mode, enable_raw_mode, Clear, ClearType, size},
+    terminal::{self, disable_raw_mode, enable_raw_mode, Clear, ClearType},
 };
 
 use clap::Parser;
@@ -104,7 +104,7 @@ fn run_menu(config: &mut AppConfig) -> io::Result<()> {
     ];
 
     loop {
-        let (cols, rows) = terminal::size()?;
+        let (cols, _rows) = terminal::size()?;
         execute!(stdout, Clear(ClearType::All))?;
 
         let title = "Customization Menu";
@@ -203,14 +203,14 @@ fn get_ao(results: &[Duration], count: usize) -> Option<Duration> {
 }
 
 fn get_best_of(results: &[Duration], count: usize) -> Option<Duration> {
-    if results.len() == 0 {
+    if results.is_empty() {
         return None;
     }
-    results.iter().min().cloned()
+    results.iter().rev().take(count).min().cloned()
 }
 
 fn get_best_total(results: &[Duration]) -> Option<Duration> {
-    if results.len() == 0 {
+    if results.is_empty() {
         return None;
     }
     results.iter().min().cloned()
@@ -224,7 +224,11 @@ fn run_timer(config: AppConfig) -> io::Result<()> {
     let mut timer_running = false;
     let mut start_time: Option<Instant> = None;
     let mut last_duration: Option<Duration> = None;
-    let mut results: Vec<Duration> = Vec::new();
+    let mut results: Vec<Duration> = config::load_solves()
+        .solves
+        .into_iter()
+        .map(|s| Duration::from_millis(s.time as u64))
+        .collect();
 
     // State for Hold run option
     let mut space_is_down = false;

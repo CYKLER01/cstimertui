@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::PathBuf;
-directories::ProjectDirs;
+use directories::ProjectDirs;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Solve {
@@ -47,7 +47,8 @@ pub fn add_solve(solve: Solve) -> std::io::Result<()> {
     if let Some(solves_path) = get_solves_path() {
         let mut solves = load_solves();
         solves.solves.push(solve);
-        let solves_str = serde_json::to_string_pretty(&solves)?;
+        let solves_str = serde_json::to_string_pretty(&solves)
+            .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
         fs::write(solves_path, solves_str)
     } else {
         Err(std::io::Error::new(
